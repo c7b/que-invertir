@@ -33,7 +33,7 @@ export async function GET() {
       provider: 'cetes',
       date: new Date().toISOString(),
       products: datos.map((dato: any) => ({
-        name: cleanHtmlEntities(dato.tipo),
+        name: cleanHtmlEntities(dato.tipo).replace(/^h2$/i, 'Cetes'),  // Capitalize Cetes
         yield: parseFloat(dato.porcentaje.replace('+', '').replace('%', '').split(' (')[0])
       }))
     };
