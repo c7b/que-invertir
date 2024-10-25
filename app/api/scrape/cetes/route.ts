@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getLatestScraping, saveScraping, isDataFresh } from '@/lib/supabase';
-import type { ScraperResponse } from '@/types';
 
 // Función helper para limpiar entidades HTML
 function cleanHtmlEntities(str: string): string {
@@ -30,7 +29,7 @@ export async function GET() {
     const { datos } = await response.json();
 
     // Formatear los datos según nuestra estructura
-    const formattedData: ScraperResponse = {
+    const formattedData: any = {
       provider: 'cetes',
       date: new Date().toISOString(),
       products: datos.map((dato: any) => ({
