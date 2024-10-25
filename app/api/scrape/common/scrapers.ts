@@ -1,4 +1,4 @@
-export async function scrapeCetes(_page: any): Promise<ScraperResponse> {
+export async function scrapeCetes(): Promise<ScraperResponse> {
   try {
     const response = await fetch('https://www.cetesdirecto.com/sites/cetes/ticker.json', {
       headers: {
