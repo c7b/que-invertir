@@ -1,6 +1,6 @@
 // app/api/scrape/route.ts
 import { NextResponse } from 'next/server';
-import { scrapePage } from '../../../lib/scraper';
+import { scrapePage } from '@/lib/scraper';
 import { supabase } from '../../../lib/supabase';
 
 export async function GET() {

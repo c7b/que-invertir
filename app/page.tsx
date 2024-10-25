@@ -72,7 +72,11 @@ function ProviderCard({ data, isLoading, error, provider }: {
           <div key={index} className="border-b pb-4">
             <h3 className="font-medium text-gray-800">{product.name}</h3>
             <p className="mt-2 text-lg text-green-600 font-semibold">
-              {product.yield}
+              {typeof product.yield === 'number' 
+                ? `${product.yield}%` 
+                : product.yield.includes('%') 
+                  ? product.yield 
+                  : `${product.yield}%`}
             </p>
           </div>
         ))}
