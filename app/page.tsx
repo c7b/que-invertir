@@ -2,12 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-interface Product {
-  name: string;
-  yield: string;
-}
-
-
 function ProviderCard({ data, isLoading, error, provider }: { 
   data: any; 
   isLoading: boolean;
