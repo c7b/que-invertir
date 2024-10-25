@@ -7,11 +7,6 @@ interface Product {
   yield: string;
 }
 
-interface ProviderData {
-  provider: string;
-  date: string;
-  products: Product[];
-}
 
 function ProviderCard({ data, isLoading, error, provider }: { 
   data: any; 
