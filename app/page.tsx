@@ -1,101 +1,172 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from 'react';
+
+interface Product {
+  name: string;
+  yield: string;
+}
+
+interface ProviderData {
+  provider: string;
+  date: string;
+  products: Product[];
+}
+
+function ProviderCard({ data, isLoading, error, provider }: { 
+  data: any; 
+  isLoading: boolean;
+  error: string | null;
+  provider: 'nu' | 'cetes' | 'supertasas';
+}) {
+  // Función para obtener el color del título según el proveedor
+  const getTitleColor = () => {
+    switch (provider) {
+      case 'nu':
+        return 'text-[#7b4dd6]';
+      case 'supertasas':
+        return 'text-[#002C66]';
+      case 'cetes':
+      default:
+        return 'text-blue-600';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <section className="bg-white rounded-lg shadow-lg p-6 min-h-[200px]">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+          <div className="space-y-3">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+            <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-white rounded-lg shadow-lg p-6">
+        <div className="text-red-500">Error: {error}</div>
+      </section>
+    );
+  }
+
+  if (!data) return null;
+
+  const items = data.products || (data.datos ? data.datos.map((item: any) => ({
+    name: item.tipo,
+    yield: item.porcentaje
+  })) : []);
+
+  return (
+    <section className="bg-white rounded-lg shadow-lg p-6">
+      <h2 className={`text-2xl font-semibold mb-4 ${getTitleColor()}`}>
+        {data.provider || 'CETES Directo'}
+      </h2>
+      <div className="space-y-4">
+        {items.map((product: any, index: number) => (
+          <div key={index} className="border-b pb-4">
+            <h3 className="font-medium text-gray-800">{product.name}</h3>
+            <p className="mt-2 text-lg text-green-600 font-semibold">
+              {product.yield}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [providers, setProviders] = useState({
+    nu: { data: null, loading: true, error: null },
+    cetes: { data: null, loading: true, error: null },
+    supertasas: { data: null, loading: true, error: null },
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  useEffect(() => {
+    // Fetch Nu data
+    fetch('/api/scrape/nu')
+      .then(res => res.json())
+      .then(data => {
+        setProviders(prev => ({
+          ...prev,
+          nu: { data, loading: false, error: null }
+        }));
+      })
+      .catch(error => {
+        setProviders(prev => ({
+          ...prev,
+          nu: { data: null, loading: false, error: error.message }
+        }));
+      });
+
+    // Fetch CETES data
+    fetch('/api/scrape/cetes')
+      .then(res => res.json())
+      .then(data => {
+        setProviders(prev => ({
+          ...prev,
+          cetes: { data, loading: false, error: null }
+        }));
+      })
+      .catch(error => {
+        setProviders(prev => ({
+          ...prev,
+          cetes: { data: null, loading: false, error: error.message }
+        }));
+      });
+
+    // Fetch SuperTasas data
+    fetch('/api/scrape/supertasas')
+      .then(res => res.json())
+      .then(data => {
+        setProviders(prev => ({
+          ...prev,
+          supertasas: { data, loading: false, error: null }
+        }));
+      })
+      .catch(error => {
+        setProviders(prev => ({
+          ...prev,
+          supertasas: { data: null, loading: false, error: error.message }
+        }));
+      });
+  }, []);
+
+  return (
+    <main className="container mx-auto p-8 max-w-6xl">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Comparador de Rendimientos</h1>
+        <p className="text-sm text-gray-600">
+          Actualización en tiempo real
+        </p>
+      </header>
+
+      <div className="grid md:grid-cols-3 gap-8">
+        <ProviderCard 
+          data={providers.nu.data}
+          isLoading={providers.nu.loading}
+          error={providers.nu.error}
+          provider="nu"
+        />
+        <ProviderCard 
+          data={providers.cetes.data}
+          isLoading={providers.cetes.loading}
+          error={providers.cetes.error}
+          provider="cetes"
+        />
+        <ProviderCard 
+          data={providers.supertasas.data}
+          isLoading={providers.supertasas.loading}
+          error={providers.supertasas.error}
+          provider="supertasas"
+        />
+      </div>
+    </main>
   );
 }
