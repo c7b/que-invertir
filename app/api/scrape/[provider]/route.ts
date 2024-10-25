@@ -1,41 +1,41 @@
 import { NextResponse } from 'next/server';
-import { getLatestScraping, saveScraping } from '@/lib/supabase';
-import { scrapePage } from '../utils';
+import { scrapePage, scrapeNu, scrapeCetes, scrapeSuperTasas } from '../common';
+import { getLatestScraping, saveScraping, isDataFresh } from '@/lib/supabase';
+import type { Provider } from '../common';
 
 export async function GET(
   request: Request,
-  { params }: { params: { provider: 'nu' | 'cetes' | 'supertasas' } }
+  { params }: { params: { provider: Provider } }
 ) {
   try {
-    // Intentar obtener datos recientes de Supabase
-    const latestData = await getLatestScraping(params.provider);
+    const isFresh = await isDataFresh(params.provider);
+    console.log(`${params.provider} data is fresh:`, isFresh);
 
-    // Si tenemos datos frescos (menos de 24 horas), los devolvemos
-    if (latestData?.is_fresh) {
-      return NextResponse.json(latestData.data);
+    if (isFresh) {
+      const latestData = await getLatestScraping(params.provider);
+      console.log(`Returning cached ${params.provider} data`);
+      return NextResponse.json(latestData?.data || null);
     }
 
-    // Si no hay datos frescos, hacemos scraping
-    let newData;
+    let result;
     switch (params.provider) {
       case 'nu':
-        newData = await scrapeNu();
+        result = await scrapePage('https://nu.com.mx/cuenta/', scrapeNu);
         break;
       case 'cetes':
-        newData = await scrapeCetes();
+        result = await scrapeCetes();
         break;
       case 'supertasas':
-        newData = await scrapeSuperTasas();
+        result = await scrapePage('https://supertasas.com/inversion/', scrapeSuperTasas);
         break;
       default:
         throw new Error('Proveedor no soportado');
     }
 
-    // Guardar nuevos datos en Supabase
-    await saveScraping(params.provider, newData);
-
-    return NextResponse.json(newData);
+    await saveScraping(params.provider, result);
+    return NextResponse.json(result);
   } catch (error: any) {
+    console.error(`Error in ${params.provider} scraper:`, error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
