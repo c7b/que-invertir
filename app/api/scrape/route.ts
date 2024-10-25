@@ -1,7 +1,6 @@
 // app/api/scrape/route.ts
 import { NextResponse } from 'next/server';
-import { scrapePage } from '@/lib/scraper';
-import { supabase } from '../../../lib/supabase';
+import { scrapePage } from '../../../lib/scraper';
 
 export async function GET() {
   try {
@@ -10,33 +9,33 @@ export async function GET() {
 
     // Add error handling and launch options to scrapePage
     const content = await scrapePage(url, async (page) => {
-      // Esperar a que la tabla se cargue
-      await page.waitForSelector('.DesktopYieldTable__Container-sc-4h2kid-0');
+      // Esperamos a que cargue la tabla con un selector más genérico
+      await page.waitForSelector('table', { timeout: 10000 });
 
       const yields = await page.evaluate(() => {
         const results = [];
         
-        // Obtener todas las filas
-        const rows = document.querySelectorAll('.DesktopYieldTable__StyledRow-sc-4h2kid-1');
+        // Usamos selectores más genéricos basados en la estructura de la tabla
+        const rows = document.querySelectorAll('table tr');
         
         let currentProduct = '';
         
         rows.forEach(row => {
-          // Obtener el texto del producto (si existe)
-          const productText = row.querySelector('.DesktopYieldTable__StyledRowFirstColumnText-sc-4h2kid-5')?.textContent;
-          if (productText) {
-            currentProduct = productText.trim();
+          // Buscamos el texto del producto en la primera columna
+          const productCell = row.querySelector('td:first-child');
+          if (productCell?.textContent) {
+            currentProduct = productCell.textContent.trim();
           }
 
-          // Obtener el porcentaje (si existe)
-          const percentage = row.querySelector('.DesktopYieldTable__StyledRowPercentage-sc-4h2kid-6')?.textContent;
-          const gatNominal = row.querySelector('.DesktopYieldTable__StyledGatPercentage-sc-4h2kid-7')?.textContent;
+          // Buscamos los porcentajes en las columnas siguientes
+          const percentageCell = row.querySelector('td:nth-child(2)');
+          const gatCell = row.querySelector('td:nth-child(3)');
           
-          if (percentage || gatNominal) {
+          if (percentageCell || gatCell) {
             results.push({
               producto: currentProduct,
-              rendimiento: percentage?.trim() || null,
-              gatNominal: gatNominal?.trim() || null
+              rendimiento: percentageCell?.textContent?.trim() || null,
+              gatNominal: gatCell?.textContent?.trim() || null
             });
           }
         });
