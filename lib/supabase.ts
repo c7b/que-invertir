@@ -1,26 +1,32 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Provider, ScrapingData, DbRecord } from '@/types';
+import { getCachedData } from './cache';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function getLatestScraping(provider: string): Promise<DbRecord | null> {
-  const { data, error } = await supabase
-    .from('scraping_history')
-    .select('*')
-    .eq('provider', provider)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+export async function getLatestScraping(provider: string) {
+  return getCachedData(
+    `latest_${provider}`,
+    async () => {
+      const { data, error } = await supabase
+        .from('scraping_history')
+        .select('*')
+        .eq('provider', provider)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
 
-  if (error) {
-    console.error('Error fetching latest scraping:', error);
-    return null;
-  }
+      if (error) {
+        console.error('Error fetching latest scraping:', error);
+        return null;
+      }
 
-  return data;
+      return data;
+    }
+  );
 }
 
 export async function saveScraping(provider: string, data: ScrapingData) {

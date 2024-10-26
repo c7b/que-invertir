@@ -1,10 +1,56 @@
 import type { ScrapingData } from '@/types';
 import puppeteer from 'puppeteer';
 
+// Agregar esta constante al inicio del archivo
+const NU_FALLBACK: ScrapingData = {
+  provider: 'nu',
+  date: new Date().toISOString(),
+  products: [
+    { 
+      name: "Ahorro Congelado: 90 días",
+      yield: 14.50,
+      termDays: 90,
+      originalTerm: "90 días",
+      lastUpdated: new Date().toISOString()
+    },
+    { 
+      name: "Ahorro Congelado: 28 días",
+      yield: 13.12,
+      termDays: 28,
+      originalTerm: "28 días",
+      lastUpdated: new Date().toISOString()
+    },
+    { 
+      name: "Ahorro Congelado: 7 días",
+      yield: 12.75,
+      termDays: 7,
+      originalTerm: "7 días",
+      lastUpdated: new Date().toISOString()
+    },
+    { 
+      name: "Ahorro Congelado: 180 días",
+      yield: 12.36,
+      termDays: 180,
+      originalTerm: "180 días",
+      lastUpdated: new Date().toISOString()
+    },
+    { 
+      name: "Cajitas Nu",
+      yield: 12.50,
+      termDays: 1,
+      originalTerm: "A la vista",
+      lastUpdated: new Date().toISOString()
+    }
+  ],
+  success: true
+};
+
 export async function scrapeNu(): Promise<ScrapingData> {
   let browser;
   try {
-    browser = await puppeteer.launch({ headless: 'new' });
+    browser = await puppeteer.launch({ 
+      headless: true  // Cambiar 'new' por true
+    });
     const page = await browser.newPage();
     
     await page.goto('https://nu.com.mx/cuenta/');
@@ -47,7 +93,6 @@ export async function scrapeNu(): Promise<ScrapingData> {
       await browser.close();
     }
 
-    // Cambiar la validación para ser menos estricta
     if (products.length === 0) {
       console.log('No products found for Nu, using fallback');
       return NU_FALLBACK;
@@ -65,49 +110,6 @@ export async function scrapeNu(): Promise<ScrapingData> {
       await browser.close();
     }
     console.error('Error scraping Nu:', error);
-    
-    // Generar datos de fallback con los valores actuales
-    return {
-      provider: 'nu',
-      date: new Date().toISOString(),
-      products: [
-        { 
-          name: "Ahorro Congelado: 90 días",
-          yield: 14.50,
-          termDays: 90,
-          originalTerm: "90 días",
-          lastUpdated: new Date().toISOString()
-        },
-        { 
-          name: "Ahorro Congelado: 28 días",
-          yield: 13.12,
-          termDays: 28,
-          originalTerm: "28 días",
-          lastUpdated: new Date().toISOString()
-        },
-        { 
-          name: "Ahorro Congelado: 7 días",
-          yield: 12.75,
-          termDays: 7,
-          originalTerm: "7 días",
-          lastUpdated: new Date().toISOString()
-        },
-        { 
-          name: "Ahorro Congelado: 180 días",
-          yield: 12.36,
-          termDays: 180,
-          originalTerm: "180 días",
-          lastUpdated: new Date().toISOString()
-        },
-        { 
-          name: "Cajitas Nu",
-          yield: 12.50,
-          termDays: 1,
-          originalTerm: "A la vista",
-          lastUpdated: new Date().toISOString()
-        }
-      ],
-      success: true
-    };
+    return NU_FALLBACK;
   }
 }
