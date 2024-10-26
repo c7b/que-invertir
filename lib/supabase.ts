@@ -6,7 +6,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function getLatestScraping(provider: Provider): Promise<DbRecord | null> {
+export async function getLatestScraping(provider: string): Promise<DbRecord | null> {
   const { data, error } = await supabase
     .from('scraping_history')
     .select('*')
@@ -23,10 +23,13 @@ export async function getLatestScraping(provider: Provider): Promise<DbRecord | 
   return data;
 }
 
-export async function saveScraping(provider: Provider, data: ScrapingData): Promise<void> {
+export async function saveScraping(provider: string, data: ScrapingData) {
   const { error } = await supabase
     .from('scraping_history')
-    .insert([{ provider, data }]);
+    .insert({
+      provider,
+      data
+    });
 
   if (error) {
     console.error('Error saving scraping:', error);

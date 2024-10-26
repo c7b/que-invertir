@@ -7,11 +7,13 @@ const SITE_URL = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}` 
   : 'http://localhost:3000';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    // Verificar autorización como sugiere Vercel
-    const headersList = headers();
-    if (headersList.get('Authorization') !== `Bearer ${CRON_SECRET}`) {
+    // Arreglar el error de headers asíncronos
+    const headersList = await headers();
+    const authHeader = await headersList.get('authorization');
+    
+    if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

@@ -47,17 +47,10 @@ export async function scrapeNu(): Promise<ScrapingData> {
       await browser.close();
     }
 
-    // Cambiar esta validación para ser menos estricta
-    if (products.length === 0) { // Antes era products.length < 4
-      console.log('No products found, using fallback');
-      return {
-        provider: 'nu',
-        date: new Date().toISOString(),
-        products: [
-          // ... fallback data ...
-        ],
-        success: true
-      };
+    // Cambiar la validación para ser menos estricta
+    if (products.length === 0) {
+      console.log('No products found for Nu, using fallback');
+      return NU_FALLBACK;
     }
 
     return {
