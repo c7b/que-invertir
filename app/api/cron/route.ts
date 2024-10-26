@@ -1,36 +1,58 @@
 import { NextResponse } from 'next/server';
-import { saveScraping } from '@/lib/supabase';
+import { headers } from 'next/headers';
+import { isDataFresh } from '@/lib/supabase';
 
-export const runtime = 'edge';
+const CRON_SECRET = process.env.CRON_SECRET;
+const SITE_URL = process.env.VERCEL_URL 
+  ? `https://${process.env.VERCEL_URL}` 
+  : 'http://localhost:3000';
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
   try {
-    // Verificar el secreto del cron (opcional pero recomendado)
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return new Response('Unauthorized', { status: 401 });
+    // Verificar autorización como sugiere Vercel
+    const headersList = headers();
+    if (headersList.get('Authorization') !== `Bearer ${CRON_SECRET}`) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
     }
 
-    // Realizar scraping para todos los proveedores
-    const providers = ['nu', 'cetes', 'supertasas'] as const;
-    const results = await Promise.allSettled(
-      providers.map(async (provider) => {
-        const data = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/scrape/${provider}`);
-        const json = await data.json();
-        await saveScraping(provider, json);
-        return provider;
-      })
-    );
+    // Verificar si necesitamos actualizar
+    const [cetesFresh, nuFresh, supertasasFresh] = await Promise.all([
+      isDataFresh('cetes'),
+      isDataFresh('nu'),
+      isDataFresh('supertasas')
+    ]);
+
+    if (cetesFresh && nuFresh && supertasasFresh) {
+      return NextResponse.json({
+        message: 'All data is fresh, no update needed',
+        date: new Date().toISOString()
+      });
+    }
+
+    // Hacer la llamada usando la URL correcta
+    const response = await fetch(`${SITE_URL}/api/scrape/all`, {
+      method: 'GET'
+    });
+
+    const data = await response.json();
 
     return NextResponse.json({
-      success: true,
-      results: results.map((result, index) => ({
-        provider: providers[index],
-        status: result.status,
-        ...(result.status === 'rejected' ? { error: result.reason } : {})
-      }))
+      message: 'Cron job completed',
+      date: new Date().toISOString(),
+      results: data
     });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+  } catch (error) {
+    console.error('Error in cron job:', error);
+    return NextResponse.json(
+      { 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        date: new Date().toISOString()
+      },
+      { status: 500 }
+    );
   }
 }
