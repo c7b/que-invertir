@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@sparticuz/chromium':
-        specifier: ^130.0.0
-        version: 130.0.0
       '@supabase/supabase-js':
         specifier: ^2.45.6
         version: 2.45.6
@@ -20,9 +17,6 @@ importers:
       puppeteer:
         specifier: ^23.6.0
         version: 23.6.0(typescript@5.6.3)
-      puppeteer-core:
-        specifier: ^23.6.0
-        version: 23.6.0
       react:
         specifier: 19.0.0-rc-69d4b800-20241021
         version: 19.0.0-rc-69d4b800-20241021
@@ -318,10 +312,6 @@ packages:
 
   '@rushstack/eslint-patch@1.10.4':
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
-
-  '@sparticuz/chromium@130.0.0':
-    resolution: {integrity: sha512-ohWzhoIV07i9pkks6RMojWCODZ7ImQsVl4Vtp9A8ZjQqLz3i5T3AolEEZ10IERUpwd9KM6JEy0eCphIHYI5u5A==}
-    engines: {node: '>= 16'}
 
   '@supabase/auth-js@2.65.1':
     resolution: {integrity: sha512-IA7i2Xq2SWNCNMKxwmPlHafBQda0qtnFr8QnyyBr+KaSxoXXqEzFCnQ1dGTy6bsZjVBgXu++o3qrDypTspaAPw==}
@@ -987,15 +977,6 @@ packages:
 
   flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
-
-  follow-redirects@1.15.9:
-    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
 
   for-each@0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
@@ -2250,13 +2231,6 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.4': {}
 
-  '@sparticuz/chromium@130.0.0':
-    dependencies:
-      follow-redirects: 1.15.9
-      tar-fs: 3.0.6
-    transitivePeerDependencies:
-      - debug
-
   '@supabase/auth-js@2.65.1':
     dependencies:
       '@supabase/node-fetch': 2.6.15
@@ -3158,8 +3132,6 @@ snapshots:
       rimraf: 3.0.2
 
   flatted@3.3.1: {}
-
-  follow-redirects@1.15.9: {}
 
   for-each@0.3.3:
     dependencies:
