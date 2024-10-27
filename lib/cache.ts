@@ -13,12 +13,10 @@ export async function getCachedData(key: string, fetchFn: () => Promise<any>) {
 
   // Si hay caché válido, usarlo
   if (cached && (now - cached.timestamp) < CACHE_DURATION) {
-    console.log('Cache hit:', key);
     return cached.data;
   }
 
   // Si no hay caché o expiró, fetch nuevos datos
-  console.log('Cache miss:', key);
   const data = await fetchFn();
   cache.set(key, { data, timestamp: now });
   return data;
