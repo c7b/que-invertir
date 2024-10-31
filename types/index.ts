@@ -1,4 +1,4 @@
-export type Provider = 'nu' | 'cetes' | 'supertasas';
+export type Provider = 'nu' | 'cetes' | 'supertasas' | 'finsus';
 
 export interface Product {
   name: string;

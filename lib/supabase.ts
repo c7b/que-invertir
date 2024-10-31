@@ -45,7 +45,10 @@ export async function saveScraping(provider: string, data: ScrapingData) {
 
 export async function isDataFresh(provider: Provider): Promise<boolean> {
   const latestData = await getLatestScraping(provider);
-  if (!latestData) return false;
+  if (!latestData) {
+    console.log(`No cached data found for ${provider}`);
+    return false;
+  }
 
   const hasValidData = latestData.data?.products?.length > 0 && 
     latestData.data.products.every((p) => 
@@ -63,5 +66,8 @@ export async function isDataFresh(provider: Provider): Promise<boolean> {
   const now = new Date();
   const hoursSinceLastUpdate = (now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60);
 
-  return hoursSinceLastUpdate < 24;
+  const isFresh = hoursSinceLastUpdate < 24;
+  console.log(`${provider} data is ${isFresh ? 'fresh' : 'stale'} (${hoursSinceLastUpdate.toFixed(2)} hours old)`);
+  
+  return isFresh;
 }

@@ -14,6 +14,10 @@ const PROVIDERS = {
   supertasas: {
     label: 'SuperTasas',
     color: 'text-[#002C66]'
+  },
+  finsus: {
+    label: 'Finsus',
+    color: 'text-[#00A19B]'
   }
 } as const;
 
@@ -118,6 +122,7 @@ export default function Home() {
     nu: { data: null, loading: true, error: null },
     cetes: { data: null, loading: true, error: null },
     supertasas: { data: null, loading: true, error: null },
+    finsus: { data: null, loading: true, error: null },
   });
 
   useEffect(() => {
