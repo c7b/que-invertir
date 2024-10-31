@@ -10,7 +10,7 @@
 
 ## Project Overview
 
-A Next.js web application that scrapes and compares investment yields from major Mexican investment platforms including CETES, Nu Bank, SuperTasas, Finsus, Klar, Stori, Covalto, and Kubo. The application provides real-time comparison through a clean interface.
+A Next.js web application that scrapes and compares investment yields from major Mexican investment platforms including CETES, Nu Bank, SuperTasas, Finsus, Klar, Stori and Covalto. The application provides real-time comparison through a clean interface.
 
 ## Technology Stack
 
@@ -164,7 +164,6 @@ GET /api/cron                // Triggers daily update
    - Klar
    - Stori
    - Covalto
-   - Kubo
    - Browser simulation
    - DOM parsing
 

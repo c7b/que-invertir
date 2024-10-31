@@ -31,10 +31,6 @@ const PROVIDERS = {
   covalto: {
     label: 'Covalto',
     color: 'text-[#ffab4d]'
-  },
-  kubo: {
-    label: 'Kubo',
-    color: 'text-[#2e9f30]'
   }
 } as const;
 
@@ -73,63 +69,72 @@ function YieldTable({ providers }: {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 bg-white rounded-xl shadow-sm border border-gray-100">
-        <thead>
-          <tr>
-            <th scope="col" className="sticky left-0 bg-gray-50 px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tl-xl">
-              Institución
-            </th>
-            {TERMS.map((term, index) => (
-              <th 
-                key={term.label} 
-                scope="col" 
-                className={`bg-gray-50 px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider
-                  ${index === TERMS.length - 1 ? 'rounded-tr-xl' : ''}`}
-              >
-                {term.label}
+    <div className="relative">
+      <div className="md:hidden mb-2 flex items-center text-sm text-gray-500">
+        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+        Desliza para ver más
+      </div>
+      
+      <div className="overflow-x-auto rounded-xl shadow-sm border border-gray-100 bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th scope="col" className="sticky left-0 bg-gray-50 px-3 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-tl-xl z-10">
+                Institución
               </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
-          {Object.entries(providers).map(([key, { data, loading, error }]) => (
-            <tr key={key} className="hover:bg-gray-50 transition-colors">
-              <td className="sticky left-0 bg-white px-6 py-4 whitespace-nowrap">
-                <span className={`font-bold ${PROVIDERS[key as keyof typeof PROVIDERS].color}`}>
-                  {PROVIDERS[key as keyof typeof PROVIDERS].label}
-                </span>
-              </td>
-              {TERMS.map(term => {
-                const value = data?.products?.find(p => 
-                  Array.isArray(term.days) 
-                    ? term.days.includes(p.termDays)
-                    : p.termDays === term.days
-                )?.yield;
-                const bestYield = getBestYield(term.days);
-
-                return (
-                  <td key={`${key}-${term.label}`} className="px-6 py-4 whitespace-nowrap text-center">
-                    {loading ? (
-                      <div className="animate-pulse h-5 w-16 bg-gray-200 rounded mx-auto" />
-                    ) : error ? (
-                      <span className="text-red-500 text-sm">Error</span>
-                    ) : (
-                      <span className={`text-sm font-semibold ${
-                        !value ? 'text-gray-400' :
-                        value === bestYield ? 'text-green-600 font-bold' :
-                        'text-gray-600'
-                      }`}>
-                        {value ? `${value.toFixed(2)}%` : '-'}
-                      </span>
-                    )}
-                  </td>
-                );
-              })}
+              {TERMS.map((term, index) => (
+                <th 
+                  key={term.label} 
+                  scope="col" 
+                  className={`bg-gray-50 px-3 sm:px-6 py-3 text-center text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap
+                    ${index === TERMS.length - 1 ? 'rounded-tr-xl' : ''}`}
+                >
+                  {term.label}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-100">
+            {Object.entries(providers).map(([key, { data, loading, error }]) => (
+              <tr key={key} className="hover:bg-gray-50 transition-colors">
+                <td className="sticky left-0 bg-white px-3 sm:px-6 py-3 whitespace-nowrap z-10">
+                  <span className={`font-bold ${PROVIDERS[key as keyof typeof PROVIDERS].color}`}>
+                    {PROVIDERS[key as keyof typeof PROVIDERS].label}
+                  </span>
+                </td>
+                {TERMS.map(term => {
+                  const value = data?.products?.find(p => 
+                    Array.isArray(term.days) 
+                      ? term.days.includes(p.termDays)
+                      : p.termDays === term.days
+                  )?.yield;
+                  const bestYield = getBestYield(term.days);
+
+                  return (
+                    <td key={`${key}-${term.label}`} className="px-6 py-4 whitespace-nowrap text-center">
+                      {loading ? (
+                        <div className="animate-pulse h-5 w-16 bg-gray-200 rounded mx-auto" />
+                      ) : error ? (
+                        <span className="text-red-500 text-sm">Error</span>
+                      ) : (
+                        <span className={`text-sm font-semibold ${
+                          !value ? 'text-gray-400' :
+                          value === bestYield ? 'text-green-600 font-bold' :
+                          'text-gray-600'
+                        }`}>
+                          {value ? `${value.toFixed(2)}%` : '-'}
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -142,8 +147,7 @@ export default function Home() {
     finsus: { data: null, loading: true, error: null },
     klar: { data: null, loading: true, error: null },
     stori: { data: null, loading: true, error: null },
-    covalto: { data: null, loading: true, error: null },
-    kubo: { data: null, loading: true, error: null }
+    covalto: { data: null, loading: true, error: null }
   });
 
   useEffect(() => {
@@ -166,9 +170,19 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="container mx-auto p-4 md:p-8 max-w-6xl">
+    <main className="container mx-auto p-2 sm:p-4 md:p-8 max-w-6xl">
       <Header />
       <YieldTable providers={providers} />
+
+      <div className="text-center mt-4 text-xs">
+        Última actualización: {new Date().toLocaleDateString('es-MX', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })}
+      </div>
     </main>
   );
 }

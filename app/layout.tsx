@@ -6,16 +6,14 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#ffffff',
-  maximumScale: 1,
-  userScalable: false,
 };
 
 // Metadata configuration
 export const metadata: Metadata = {
   metadataBase: new URL('https://queinvertir.com'),
   title: "¿Qué Invertir? - Comparador de Rendimientos en México",
-  description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real. Encuentra la mejor inversión con datos actualizados diariamente.",
-  keywords: "inversiones, CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto, Kubo, rendimientos, tasas, ahorro, México, finanzas personales, inversión fija, pagarés",
+  description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar y Covalto en tiempo real. Encuentra la mejor inversión con datos actualizados diariamente.",
+  keywords: "inversiones, CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto, rendimientos, tasas, ahorro, México, finanzas personales, inversión fija, pagarés",
   authors: [{ name: "Cristobal A. | Inversionero.com" }],
   creator: "Cristobal A.",
   publisher: "Inversionero.com",
@@ -26,7 +24,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "¿Qué Invertir? - Comparador de Rendimientos en México",
-    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real",
+    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar y Covalto en tiempo real",
     url: "https://queinvertir.com",
     siteName: "¿Qué Invertir?",
     locale: "es_MX",
@@ -41,7 +39,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "¿Qué Invertir? - Comparador de Rendimientos en México",
-    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real",
+    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar y Covalto en tiempo real",
     images: ["/icon-512x512.png"],
     site: "@inversionero",
     creator: "@inversionero",
