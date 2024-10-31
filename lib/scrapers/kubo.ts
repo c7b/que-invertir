@@ -9,29 +9,51 @@ export async function scrapeKubo(): Promise<ScrapingData> {
     });
     const page = await browser.newPage();
     
-    await page.goto('https://www.kubofinanciero.com/ley-transparencia/kubo-plazofijo-tasas');
-    
-    await page.waitForSelector('.kdst-plazofijo-table');
+    await page.goto('https://www.kubofinanciero.com/ley-transparencia/kubo-plazofijo-tasas', {
+      waitUntil: 'networkidle0',
+      timeout: 30000
+    });
 
     const products = await page.evaluate(() => {
       const uniqueProducts = new Map();
       
-      const rows = document.querySelectorAll('.kdst-plazofijo-table > div:not(:first-child)');
+      // Verificar que estamos en el Nivel 0
+      const titleElement = document.querySelector('.headline-medium');
+      if (!titleElement?.textContent?.includes('Nivel (0)')) {
+        return [];
+      }
+
+      // Obtener el contenedor específico del Nivel 0
+      const container = titleElement.closest('.kdst-plazofijo-table');
+      if (!container) return [];
+
+      // Obtener todas las filas de datos
+      const rows = container.querySelectorAll('[style="grid-template-columns: repeat(4, 1fr); display: grid;"]');
       
-      rows.forEach(row => {
-        const cells = row.querySelectorAll('.kds-detail-table');
+      rows.forEach((row, index) => {
+        // Saltamos la primera fila que es el encabezado
+        if (index === 0) return;
+        
+        const cells = row.querySelectorAll('.kds-detail-text');
         if (cells.length >= 2) {
-          const days = parseInt(cells[0].textContent?.trim() || '0');
-          const rate = parseFloat(cells[1].textContent?.trim().replace('%', '') || '0');
+          const days = cells[0]?.textContent?.trim();
+          const rate = cells[1]?.textContent?.trim();
           
           if (days && rate) {
-            const key = days.toString();
-            if (!uniqueProducts.has(key) || uniqueProducts.get(key).yield < rate) {
-              uniqueProducts.set(key, {
-                yield: rate,
-                termDays: days,
-                originalTerm: `${days} días`
-              });
+            const termDays = parseInt(days);
+            const yieldValue = parseFloat(rate.replace('%', ''));
+            
+            if (!isNaN(termDays) && !isNaN(yieldValue)) {
+              const key = termDays.toString();
+              // Actualizar solo si no existe o si la tasa es menor
+              if (!uniqueProducts.has(key) || uniqueProducts.get(key).yield > yieldValue) {
+                uniqueProducts.set(key, {
+                  name: `Kubo ${days} días`,
+                  yield: yieldValue,
+                  termDays,
+                  originalTerm: `${days} días`
+                });
+              }
             }
           }
         }
@@ -44,21 +66,21 @@ export async function scrapeKubo(): Promise<ScrapingData> {
       await browser.close();
     }
 
-    const now = new Date().toISOString();
+    if (products.length === 0) {
+      throw new Error('No products found in Nivel 0');
+    }
 
     return {
       provider: 'kubo',
-      date: now,
+      date: new Date().toISOString(),
       products: products.sort((a, b) => b.yield - a.yield),
       success: true
     };
-    
 
   } catch (error) {
     if (browser) {
       await browser.close();
     }
-    console.error('Error scraping Kubo:', error);
-    throw error;
+    throw new Error(error.message || 'Failed to scrape Kubo');
   }
 } 

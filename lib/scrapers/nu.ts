@@ -1,50 +1,11 @@
 import type { ScrapingData } from '@/types';
 import puppeteer from 'puppeteer';
 
-// Agregar esta constante al inicio del archivo
-const NU_FALLBACK: ScrapingData = {
-  provider: 'nu',
-  date: new Date().toISOString(),
-  products: [
-    { 
-      name: "Ahorro Congelado: 90 días",
-      yield: 14.50,
-      termDays: 90,
-      originalTerm: "90 días",
-    },
-    { 
-      name: "Ahorro Congelado: 28 días",
-      yield: 13.12,
-      termDays: 28,
-      originalTerm: "28 días",
-    },
-    { 
-      name: "Ahorro Congelado: 7 días",
-      yield: 12.75,
-      termDays: 7,
-      originalTerm: "7 días",
-    },
-    { 
-      name: "Ahorro Congelado: 180 días",
-      yield: 12.36,
-      termDays: 180,
-      originalTerm: "180 días",
-    },
-    { 
-      name: "Cajitas Nu",
-      yield: 12.50,
-      termDays: 1,
-      originalTerm: "A la vista",
-    }
-  ],
-  success: true
-};
-
 export async function scrapeNu(): Promise<ScrapingData> {
   let browser;
   try {
     browser = await puppeteer.launch({ 
-      headless: true  // Cambiar 'new' por true
+      headless: true
     });
     const page = await browser.newPage();
     
@@ -64,7 +25,6 @@ export async function scrapeNu(): Promise<ScrapingData> {
         
         if (productText && yieldText) {
           const name = productText.trim();
-          // Solo procesar si el nombre incluye "días" o "Cajitas"
           if (name.includes('días') || name.includes('Cajitas')) {
             const termMatch = name.match(/(\d+)\s*días/);
             const termDays = termMatch ? parseInt(termMatch[1]) : 
@@ -88,8 +48,7 @@ export async function scrapeNu(): Promise<ScrapingData> {
     }
 
     if (products.length === 0) {
-      console.log('No products found for Nu, using fallback');
-      return NU_FALLBACK;
+      throw new Error('No products found for Nu');
     }
 
     return {
@@ -104,6 +63,6 @@ export async function scrapeNu(): Promise<ScrapingData> {
       await browser.close();
     }
     console.error('Error scraping Nu:', error);
-    return NU_FALLBACK;
+    throw error; // Re-lanzamos el error para que sea manejado por el API route
   }
 }

@@ -6,9 +6,9 @@ export async function GET() {
     const data = await scrapeKubo();
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error in Kubo route:', error);
+    console.error('Error scraping Kubo:', error.message);
     return NextResponse.json(
-      { error: 'Failed to scrape Kubo' },
+      { success: false, error: error.message || 'Failed to scrape Kubo' },
       { status: 500 }
     );
   }

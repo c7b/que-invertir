@@ -34,7 +34,7 @@ const PROVIDERS = {
   },
   kubo: {
     label: 'Kubo',
-    color: 'text-[#00A7E1]'
+    color: 'text-[#2e9f30]'
   }
 } as const;
 

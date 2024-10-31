@@ -10,7 +10,7 @@
 
 ## Project Overview
 
-A Next.js web application that scrapes and compares investment yields from three major Mexican investment platforms: CETES (government bonds), Nu Bank, and SuperTasas. The application provides real-time comparison through a clean interface.
+A Next.js web application that scrapes and compares investment yields from major Mexican investment platforms including CETES, Nu Bank, SuperTasas, Finsus, Klar, Stori, Covalto, and Kubo. The application provides real-time comparison through a clean interface.
 
 ## Technology Stack
 
@@ -104,7 +104,9 @@ CRON_SECRET=XXX
 
    ```typescript
    export async function scrapeProvider(): Promise<ScrapingData> {
+     let browser;
      try {
+       browser = await puppeteer.launch({ headless: true });
        // Scraping logic
        return {
          provider: 'provider_name',
@@ -113,7 +115,8 @@ CRON_SECRET=XXX
          success: true
        };
      } catch (error) {
-       // Return fallback data or error
+       if (browser) await browser.close();
+       throw error; // Let API route handle errors
      }
    }
    ```
@@ -149,20 +152,21 @@ GET /api/cron                // Triggers daily update
 
 ## Scraping Methods
 
-1. **CETES:**
-   - Direct API call
-   - JSON response
-   - No browser needed
+1. **Direct API Call:**
+   - CETES (government bonds)
+   - Simple fetch requests
+   - JSON response parsing
 
-2. **Nu:**
-   - Puppeteer scraping
-   - Static fallback data
+2. **Puppeteer Scraping:**
+   - Nu
+   - SuperTasas
+   - Finsus
+   - Klar
+   - Stori
+   - Covalto
+   - Kubo
    - Browser simulation
-
-3. **SuperTasas:**
-   - Puppeteer scraping
-   - Form interaction
-   - Browser simulation
+   - DOM parsing
 
 ## Cache Implementation
 
@@ -181,55 +185,30 @@ const cache: Map<string, CacheItem> = new Map();
 - Automatic invalidation
 - Map-based implementation
 
-## Fallback Mechanism
-
-```typescript
-// Example of Nu fallback data
-const NU_FALLBACK: ScrapingData = {
-  provider: 'nu',
-  date: new Date().toISOString(),
-  products: [
-    { name: "Ahorro", yield: 14.50, termDays: 90, originalTerm: "90 días" },
-    // ... more fallback products
-  ],
-  success: true
-};
-```
-
-- Each provider has its own fallback data
-- Fallback triggers on:
-  1. Scraping failures
-  2. Network errors
-  3. Website structure changes
 
 ## Error Handling Strategy
 
 1. **Scraping Errors:**
-   - Use fallback data
    - Log error details
-   - Return partial results
+   - Throw error to API route
+   - No fallback data
 
 2. **API Errors:**
-   - **500**: No successful scrapes
+   - **500**: Failed scraping
    - **401**: Invalid CRON authentication
-   - **200**: Partial success (some providers failed)
-
-3. **Cache Errors:**
-   - Fallback to database
-   - Reset cache if corrupted
+   - **200**: Successful scrape
 
 ## Current Business Rules
 
 1. **Data Freshness:**
    - Memory cache: 5 minutes
    - Database cache: 24 hours
-   - Fallback data: Used when scraping fails
 
 2. **Required Product Fields:**
    - `name` (Spanish)
    - `yield` (number)
    - `termDays` (number)
-   - `lastUpdated` (ISO string)
+   - `originalTerm` (string)
 
 ## Data Flow
 
