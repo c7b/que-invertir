@@ -1,4 +1,4 @@
-export type Provider = 'nu' | 'cetes' | 'supertasas' | 'finsus';
+export type Provider = 'nu' | 'cetes' | 'supertasas' | 'finsus' | 'klar';
 
 export interface Product {
   name: string;
@@ -18,7 +18,6 @@ export interface ScrapingData {
   error?: string;
 }
 
-// Para tipar las respuestas de Supabase
 export interface DbRecord {
   id: string;
   provider: Provider;

@@ -18,6 +18,10 @@ const PROVIDERS = {
   finsus: {
     label: 'Finsus',
     color: 'text-[#00A19B]'
+  },
+  klar: {
+    label: 'Klar',
+    color: 'text-[#1c1c1c]'
   }
 } as const;
 
@@ -123,6 +127,7 @@ export default function Home() {
     cetes: { data: null, loading: true, error: null },
     supertasas: { data: null, loading: true, error: null },
     finsus: { data: null, loading: true, error: null },
+    klar: { data: null, loading: true, error: null },
   });
 
   useEffect(() => {
