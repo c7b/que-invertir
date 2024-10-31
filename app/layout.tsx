@@ -6,28 +6,57 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#ffffff',
+  maximumScale: 1,
+  userScalable: false,
 };
 
 // Metadata configuration
 export const metadata: Metadata = {
-  title: "¿Qué Invertir? - Comparador de Rendimientos",
-  description: "Compara tasas de rendimiento de CETES, Nu y SuperTasas en tiempo real. Encuentra la mejor opción para tu inversión con datos actualizados diariamente.",
-  keywords: "inversiones, CETES, Nu, SuperTasas, rendimientos, tasas, ahorro, México, finanzas personales",
-  authors: [{ name: "c7bs" }],
+  metadataBase: new URL('https://queinvertir.com'),
+  title: "¿Qué Invertir? - Comparador de Rendimientos en México",
+  description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real. Encuentra la mejor inversión con datos actualizados diariamente.",
+  keywords: "inversiones, CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto, Kubo, rendimientos, tasas, ahorro, México, finanzas personales, inversión fija, pagarés",
+  authors: [{ name: "Cristobal A. | Inversionero.com" }],
+  creator: "Cristobal A.",
+  publisher: "Inversionero.com",
+  formatDetection: {
+    telephone: false,
+    date: false,
+    address: false,
+  },
   openGraph: {
-    title: "¿Qué Invertir? - Comparador de Rendimientos",
-    description: "Compara tasas de rendimiento de CETES, Nu y SuperTasas en tiempo real",
+    title: "¿Qué Invertir? - Comparador de Rendimientos en México",
+    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real",
     url: "https://queinvertir.com",
     siteName: "¿Qué Invertir?",
     locale: "es_MX",
     type: "website",
+    images: [{
+      url: "/icon-512x512.png",
+      width: 512,
+      height: 512,
+      alt: "¿Qué Invertir? Logo"
+    }],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "¿Qué Invertir? - Comparador de Rendimientos",
-    description: "Compara tasas de rendimiento de CETES, Nu y SuperTasas en tiempo real",
+    card: "summary",
+    title: "¿Qué Invertir? - Comparador de Rendimientos en México",
+    description: "Compara tasas de rendimiento de CETES, Nu, Finsus, SuperTasas, Stori, Klar, Covalto y Kubo en tiempo real",
+    images: ["/icon-512x512.png"],
+    site: "@inversionero",
+    creator: "@inversionero",
   },
-  robots: "index, follow",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -38,6 +67,10 @@ export const metadata: Metadata = {
     apple: [
       { url: "/icon-192x192.png", sizes: "192x192" }
     ],
+    shortcut: ["/favicon.ico"],
+  },
+  alternates: {
+    canonical: "https://queinvertir.com",
   },
 };
 

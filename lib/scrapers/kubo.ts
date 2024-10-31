@@ -11,7 +11,7 @@ export async function scrapeKubo(): Promise<ScrapingData> {
     
     await page.goto('https://www.kubofinanciero.com/ley-transparencia/kubo-plazofijo-tasas', {
       waitUntil: 'networkidle0',
-      timeout: 30000
+      timeout: 20000
     });
 
     const products = await page.evaluate(() => {
