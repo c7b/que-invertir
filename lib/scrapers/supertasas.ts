@@ -54,8 +54,7 @@ export async function scrapeSuperTasas(): Promise<ScrapingData> {
               name: `SuperTasas: ${termText}`,
               yield: yieldValue,
               termDays,
-              originalTerm: termText,
-              lastUpdated: new Date().toISOString()
+              originalTerm: termText
             });
           }
         }

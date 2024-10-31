@@ -1,4 +1,4 @@
-export type Provider = 'nu' | 'cetes' | 'supertasas' | 'finsus' | 'klar' | 'stori' | 'covalto';
+export type Provider = 'nu' | 'cetes' | 'supertasas' | 'finsus' | 'klar' | 'stori' | 'covalto' | 'kubo';
 
 export interface Product {
   name: string;
@@ -7,7 +7,6 @@ export interface Product {
   originalTerm: string;
   minimumAmount?: number;
   restrictions?: string[];
-  lastUpdated: string;
 }
 
 export interface ScrapingData {

@@ -57,7 +57,6 @@ export async function scrapeKlar(): Promise<ScrapingData> {
               yield: yieldValue,
               termDays,
               originalTerm: days,
-              lastUpdated: new Date().toISOString()
             });
           }
         }

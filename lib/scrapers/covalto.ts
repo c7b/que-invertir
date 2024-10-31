@@ -36,7 +36,6 @@ export async function scrapeCovalto(): Promise<ScrapingData> {
                 yield: yieldValue,
                 termDays,
                 originalTerm: plazo,
-                lastUpdated: new Date().toISOString()
               });
             }
           }

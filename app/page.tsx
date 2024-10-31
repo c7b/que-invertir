@@ -31,6 +31,10 @@ const PROVIDERS = {
   covalto: {
     label: 'Covalto',
     color: 'text-[#ffab4d]'
+  },
+  kubo: {
+    label: 'Kubo',
+    color: 'text-[#00A7E1]'
   }
 } as const;
 
@@ -138,7 +142,8 @@ export default function Home() {
     finsus: { data: null, loading: true, error: null },
     klar: { data: null, loading: true, error: null },
     stori: { data: null, loading: true, error: null },
-    covalto: { data: null, loading: true, error: null }
+    covalto: { data: null, loading: true, error: null },
+    kubo: { data: null, loading: true, error: null }
   });
 
   useEffect(() => {

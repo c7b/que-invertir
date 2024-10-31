@@ -40,7 +40,6 @@ export async function scrapeStori(): Promise<ScrapingData> {
               yield: yieldValue,
               termDays,
               originalTerm: term,
-              lastUpdated: new Date().toISOString()
             });
           }
         }

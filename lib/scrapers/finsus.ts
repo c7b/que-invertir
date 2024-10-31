@@ -46,7 +46,6 @@ export async function scrapeFinsus(): Promise<ScrapingData> {
             yield: parseFloat(yieldText.replace('%', '')),
             termDays: termMapping[label.trim()] || parseInt(label),
             originalTerm: label,
-            lastUpdated: new Date().toISOString()
           });
         }
       }

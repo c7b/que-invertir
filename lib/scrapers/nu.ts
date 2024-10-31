@@ -11,35 +11,30 @@ const NU_FALLBACK: ScrapingData = {
       yield: 14.50,
       termDays: 90,
       originalTerm: "90 días",
-      lastUpdated: new Date().toISOString()
     },
     { 
       name: "Ahorro Congelado: 28 días",
       yield: 13.12,
       termDays: 28,
       originalTerm: "28 días",
-      lastUpdated: new Date().toISOString()
     },
     { 
       name: "Ahorro Congelado: 7 días",
       yield: 12.75,
       termDays: 7,
       originalTerm: "7 días",
-      lastUpdated: new Date().toISOString()
     },
     { 
       name: "Ahorro Congelado: 180 días",
       yield: 12.36,
       termDays: 180,
       originalTerm: "180 días",
-      lastUpdated: new Date().toISOString()
     },
     { 
       name: "Cajitas Nu",
       yield: 12.50,
       termDays: 1,
       originalTerm: "A la vista",
-      lastUpdated: new Date().toISOString()
     }
   ],
   success: true
@@ -80,7 +75,6 @@ export async function scrapeNu(): Promise<ScrapingData> {
               yield: parseFloat(yieldText.replace('%', '').trim()),
               termDays,
               originalTerm: name,
-              lastUpdated: new Date().toISOString()
             });
           }
         }

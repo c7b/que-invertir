@@ -11,7 +11,6 @@ export async function scrapeCetes(): Promise<ScrapingData> {
       yield: normalizeYield(dato.porcentaje),
       termDays: getTermDays(dato.tipo),
       originalTerm: dato.tipo,
-      lastUpdated: new Date().toISOString()
     }));
 
     return {

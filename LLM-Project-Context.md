@@ -49,7 +49,6 @@ type Product = {
   yield: number;
   termDays: number;
   originalTerm: string;
-  lastUpdated: string;
 };
 ```
 
