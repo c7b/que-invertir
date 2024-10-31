@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { Header } from '@/components/Header';
 
 const PROVIDERS = {
   nu: {
@@ -36,7 +37,7 @@ const PROVIDERS = {
 const TERMS = [
   { label: 'A la vista', days: 1 },
   { label: '7 días', days: 7 },
-  { label: '28-30 días', days: [28, 30] as number[] },
+  { label: '30 días', days: [28, 30] as number[] },
   { label: '90 días', days: [90, 91] as number[] },
   { label: '180 días', days: [180, 182] as number[] },
   { label: '365 días', days: [360, 364, 365] as number[] },
@@ -161,13 +162,7 @@ export default function Home() {
 
   return (
     <main className="container mx-auto p-4 md:p-8 max-w-6xl">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Comparador de Rendimientos</h1>
-        <p className="text-sm text-gray-600">
-          Actualización en tiempo real
-        </p>
-      </header>
-
+      <Header />
       <YieldTable providers={providers} />
     </main>
   );
