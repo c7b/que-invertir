@@ -5,15 +5,15 @@ import { useEffect, useState } from 'react';
 const PROVIDERS = {
   nu: {
     label: 'Nu',
-    color: '[#7b4dd6]'
+    color: 'text-[#7b4dd6]'
   },
   cetes: {
     label: 'CETES',
-    color: 'blue-600'
+    color: 'text-blue-600'
   },
   supertasas: {
     label: 'SuperTasas',
-    color: '[#002C66]'
+    color: 'text-[#002C66]'
   }
 } as const;
 
@@ -75,12 +75,9 @@ function YieldTable({ providers }: {
           {Object.entries(providers).map(([key, { data, loading, error }]) => (
             <tr key={key} className="hover:bg-gray-50 transition-colors">
               <td className="sticky left-0 bg-white px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full bg-${PROVIDERS[key as keyof typeof PROVIDERS].color} mr-3`} />
-                  <span className={`font-bold text-${PROVIDERS[key as keyof typeof PROVIDERS].color}`}>
-                    {PROVIDERS[key as keyof typeof PROVIDERS].label}
-                  </span>
-                </div>
+                <span className={`font-bold ${PROVIDERS[key as keyof typeof PROVIDERS].color}`}>
+                  {PROVIDERS[key as keyof typeof PROVIDERS].label}
+                </span>
               </td>
               {TERMS.map(term => {
                 const value = data?.products?.find(p => 
