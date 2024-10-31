@@ -1,3 +1,5 @@
+import type { Product } from '@/types';
+
 export function cleanHtmlEntities(str: string): string {
   return str
     .replace(/&ntilde;/g, 'ñ')
@@ -84,3 +86,19 @@ export function normalizeTermDays(product: {name: string, termDays: number}): nu
   
   return days;
 }
+// Función para filtrar productos relevantes
+export function filterRelevantProducts(products: Product[]): Product[] {
+  return products.filter(product => {
+    const name = product.name.toLowerCase();
+    // Excluir BONOS y UDIBONOS
+    if (name.includes('bono')) return false;
+    // Incluir solo productos específicos de CETES
+    if (name.includes('cetes')) {
+      return ['1 mes', '3 meses', '6 meses', '1 año'].some(term => 
+        name.includes(term.toLowerCase())
+      );
+    }
+    return true;
+  });
+}
+

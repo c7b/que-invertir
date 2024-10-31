@@ -22,6 +22,10 @@ const PROVIDERS = {
   klar: {
     label: 'Klar',
     color: 'text-[#1c1c1c]'
+  },
+  stori: {
+    label: 'Stori',
+    color: 'text-[#003a40]'
   }
 } as const;
 
@@ -128,6 +132,7 @@ export default function Home() {
     supertasas: { data: null, loading: true, error: null },
     finsus: { data: null, loading: true, error: null },
     klar: { data: null, loading: true, error: null },
+    stori: { data: null, loading: true, error: null }
   });
 
   useEffect(() => {
