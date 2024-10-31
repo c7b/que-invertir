@@ -26,6 +26,10 @@ const PROVIDERS = {
   stori: {
     label: 'Stori',
     color: 'text-[#003a40]'
+  },
+  covalto: {
+    label: 'Covalto',
+    color: 'text-[#ffab4d]'
   }
 } as const;
 
@@ -33,9 +37,9 @@ const TERMS = [
   { label: 'A la vista', days: 1 },
   { label: '7 días', days: 7 },
   { label: '28-30 días', days: [28, 30] as number[] },
-  { label: '90 días', days: 90 },
-  { label: '180 días', days: 180 },
-  { label: '365 días', days: 365 },
+  { label: '90 días', days: [90, 91] as number[] },
+  { label: '180 días', days: [180, 182] as number[] },
+  { label: '365 días', days: [360, 364, 365] as number[] },
   { label: '3 años', days: 1095 },
   { label: '5 años', days: 1825 },
   { label: '10 años', days: 3650 },
@@ -132,7 +136,8 @@ export default function Home() {
     supertasas: { data: null, loading: true, error: null },
     finsus: { data: null, loading: true, error: null },
     klar: { data: null, loading: true, error: null },
-    stori: { data: null, loading: true, error: null }
+    stori: { data: null, loading: true, error: null },
+    covalto: { data: null, loading: true, error: null }
   });
 
   useEffect(() => {
