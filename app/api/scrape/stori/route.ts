@@ -4,7 +4,6 @@ import { scrapeStori } from '@/lib/scrapers/stori';
 
 export async function GET() {
   try {
-    // Primero verificamos si tenemos datos frescos en caché
     const isFresh = await isDataFresh('stori');
     
     if (isFresh) {
@@ -12,20 +11,22 @@ export async function GET() {
       return NextResponse.json(latestData?.data || null);
     }
 
-    // Si no hay datos frescos, hacemos el scraping
+    console.log('Starting Stori scraping...'); // Debug log
     const scrapedData = await scrapeStori();
+    console.log('Stori scraping completed:', scrapedData.success); // Debug log
     
-    // Si el scraping fue exitoso, guardamos en la base de datos
     if (scrapedData.success) {
       await saveScraping('stori', scrapedData);
     }
 
     return NextResponse.json(scrapedData);
   } catch (error) {
+    console.error('Stori scraping error:', error); // Error log
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.stack : undefined : undefined
       }, 
       { status: 500 }
     );

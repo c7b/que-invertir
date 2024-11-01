@@ -11,7 +11,9 @@ export async function GET() {
       return NextResponse.json(latestData?.data || null);
     }
 
+    console.log('Starting SuperTasas scraping...');
     const scrapedData = await scrapeSuperTasas();
+    console.log('SuperTasas scraping completed:', scrapedData.success);
     
     if (scrapedData.success) {
       await saveScraping('supertasas', scrapedData);
@@ -19,10 +21,12 @@ export async function GET() {
 
     return NextResponse.json(scrapedData);
   } catch (error) {
+    console.error('SuperTasas scraping error:', error);
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: process.env.NODE_ENV === 'development' ? error instanceof Error ? error.stack : undefined : undefined
       }, 
       { status: 500 }
     );

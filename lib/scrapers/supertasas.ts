@@ -1,13 +1,20 @@
 import type { ScrapingData } from '@/types';
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 
 export async function scrapeSuperTasas(): Promise<ScrapingData> {
   let browser;
   try {
     browser = await puppeteer.launch({
-      headless: true
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+      headless: true,
+      ignoreHTTPSErrors: true,
     });
+    
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(30000);
     
     await page.goto('https://supertasas.com/inversion/');
     
