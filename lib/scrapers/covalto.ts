@@ -12,7 +12,7 @@ export async function scrapeCovalto(): Promise<ScrapingData> {
     await page.goto('https://covalto.com/invierte-hoy/');
     // Esperamos a que cargue la tabla
     await page.waitForSelector('table', {
-      timeout: 10000
+      timeout: 5000
     });
 
     const products = await page.evaluate(() => {

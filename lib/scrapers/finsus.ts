@@ -12,7 +12,7 @@ export async function scrapeFinsus(): Promise<ScrapingData> {
     await page.goto('https://finsus-simulator.web.app/v2');
     // Esperamos a que cargue la tabla con los datos
     await page.waitForSelector('.graph-container.row', {
-      timeout: 10000
+      timeout: 5000
     });
 
     const products = await page.evaluate(() => {

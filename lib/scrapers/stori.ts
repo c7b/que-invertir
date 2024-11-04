@@ -12,7 +12,7 @@ export async function scrapeStori(): Promise<ScrapingData> {
     await page.goto('https://www.storicard.com/stori-cuentamas');
     
     await page.waitForSelector('.text-\\[\\#132C42\\].w-full', {
-      timeout: 10000
+      timeout: 5000
     });
 
     const products = await page.evaluate(() => {
