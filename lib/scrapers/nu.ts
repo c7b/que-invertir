@@ -11,17 +11,19 @@ export async function scrapeNu(): Promise<ScrapingData> {
     
     await page.goto('https://nu.com.mx/cuenta/');
     await page.waitForSelector('.DesktopYieldTable__Container-sc-4h2kid-0', {
-      timeout: 5000
+      timeout: 15000
     });
 
     const products = await page.evaluate(() => {
       const results = [];
       const rows = document.querySelectorAll('.DesktopYieldTable__StyledRow-sc-4h2kid-1');
       
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const productText = row.querySelector('.DesktopYieldTable__StyledRowFirstColumnText-sc-4h2kid-5')?.textContent;
-        const yieldText = row.querySelector('.DesktopYieldTable__StyledRowPercentage-sc-4h2kid-6')?.textContent;
+      for (let i = 4; i < rows.length; i += 4) {
+        const productRow = rows[i];
+        const yieldRow = rows[i + 1];
+        
+        const productText = productRow.querySelector('.DesktopYieldTable__StyledRowFirstColumnText-sc-4h2kid-5')?.textContent;
+        const yieldText = yieldRow.querySelector('.DesktopYieldTable__StyledRowPercentage-sc-4h2kid-6')?.textContent;
         
         if (productText && yieldText) {
           const name = productText.trim();
@@ -38,7 +40,7 @@ export async function scrapeNu(): Promise<ScrapingData> {
             });
           }
         }
-      };
+      }
 
       return results;
     });

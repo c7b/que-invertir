@@ -27,7 +27,7 @@ export async function scrapeKlar(): Promise<ScrapingData> {
     
     // Esperamos a que la tabla se cargue
     await page.waitForSelector('.tr.body-row', {
-      timeout: 5000
+      timeout: 7000
     });
 
     const products = await page.evaluate(() => {

@@ -13,12 +13,12 @@ export async function scrapeSuperTasas(): Promise<ScrapingData> {
     
     // Esperamos a que la animación termine y los elementos estén visibles
     await page.waitForSelector('.tasasPM .fade-in.show', {
-      timeout: 5000,
+      timeout: 7000,
       visible: true
     });
 
     // Esperamos usando setTimeout en lugar de waitForTimeout
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 4000));
 
     const products = await page.evaluate(() => {
       const results = [];
