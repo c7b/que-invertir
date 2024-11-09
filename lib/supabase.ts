@@ -71,3 +71,24 @@ export async function isDataFresh(provider: Provider): Promise<boolean> {
   
   return isFresh;
 }
+
+export async function getConsolidatedView() {
+  return getCachedData(
+    'consolidated_view',
+    async () => {
+      const { data, error } = await supabase
+        .from('consolidated_view')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error) {
+        console.error('Error fetching consolidated view:', error);
+        return null;
+      }
+
+      return data?.consolidated_data;
+    }
+  );
+}

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: que-invertir
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+
+  - type: cron
+    name: que-invertir-update
+    schedule: "0 */12 * * *"  # Runs every 12 hours
+    httpMethod: GET
+    url: https://que-invertir.onrender.com/api/cron
+    headers:
+      - key: Authorization
+        value: Bearer ${CRON_SECRET}

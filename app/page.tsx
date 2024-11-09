@@ -150,23 +150,40 @@ export default function Home() {
     covalto: { data: null, loading: true, error: null }
   });
 
+  const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+
   useEffect(() => {
-    Object.keys(PROVIDERS).forEach(provider => {
-      fetch(`/api/scrape/${provider}`)
-        .then(res => res.json())
-        .then(data => {
-          setProviders(prev => ({
-            ...prev,
-            [provider]: { data, loading: false, error: null }
-          }));
-        })
-        .catch(error => {
-          setProviders(prev => ({
-            ...prev,
-            [provider]: { data: null, loading: false, error: error.message }
-          }));
-        });
-    });
+    fetch('/api/investments')
+      .then(res => res.json())
+      .then(response => {
+        if (response.success && response.data) {
+          const newProviders = Object.keys(PROVIDERS).reduce((acc, provider) => ({
+            ...acc,
+            [provider]: {
+              data: response.data[provider],
+              loading: false,
+              error: null
+            }
+          }), {});
+
+          setProviders(newProviders);
+          setLastUpdate(response.date);
+        } else {
+          throw new Error('Failed to fetch data');
+        }
+      })
+      .catch(error => {
+        const errorProviders = Object.keys(PROVIDERS).reduce((acc, provider) => ({
+          ...acc,
+          [provider]: {
+            data: null,
+            loading: false,
+            error: error.message
+          }
+        }), {});
+        
+        setProviders(errorProviders);
+      });
   }, []);
 
   return (
@@ -175,13 +192,13 @@ export default function Home() {
       <YieldTable providers={providers} />
 
       <div className="text-center mt-4 text-xs">
-        Última actualización: {new Date().toLocaleDateString('es-MX', {
+        Última actualización: {lastUpdate ? new Date(lastUpdate).toLocaleDateString('es-MX', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
-        })}
+        }) : 'Cargando...'}
       </div>
     </main>
   );
