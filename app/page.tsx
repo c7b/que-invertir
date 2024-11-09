@@ -48,12 +48,16 @@ const TERMS = [
   { label: '30 años', days: 10950 },
 ] as const;
 
+type ProviderState = {
+  data: any;
+  loading: boolean;
+  error: string | null;
+};
+
+type ProvidersState = Record<keyof typeof PROVIDERS, ProviderState>;
+
 function YieldTable({ providers }: { 
-  providers: Record<keyof typeof PROVIDERS, {
-    data: any;
-    loading: boolean;
-    error: string | null;
-  }>;
+  providers: ProvidersState;
 }) {
   const getBestYield = (termDays: number | number[]) => {
     let maxYield = -1;
@@ -140,7 +144,7 @@ function YieldTable({ providers }: {
 }
 
 export default function Home() {
-  const [providers, setProviders] = useState({
+  const [providers, setProviders] = useState<ProvidersState>({
     nu: { data: null, loading: true, error: null },
     cetes: { data: null, loading: true, error: null },
     supertasas: { data: null, loading: true, error: null },
@@ -157,14 +161,14 @@ export default function Home() {
       .then(res => res.json())
       .then(response => {
         if (response.success && response.data) {
-          const newProviders = Object.keys(PROVIDERS).reduce((acc, provider) => ({
+          const newProviders: ProvidersState = Object.keys(PROVIDERS).reduce((acc, provider) => ({
             ...acc,
             [provider]: {
               data: response.data[provider],
               loading: false,
               error: null
             }
-          }), {});
+          }), {} as ProvidersState);
 
           setProviders(newProviders);
           setLastUpdate(response.date);
@@ -173,14 +177,14 @@ export default function Home() {
         }
       })
       .catch(error => {
-        const errorProviders = Object.keys(PROVIDERS).reduce((acc, provider) => ({
+        const errorProviders: ProvidersState = Object.keys(PROVIDERS).reduce((acc, provider) => ({
           ...acc,
           [provider]: {
             data: null,
             loading: false,
             error: error.message
           }
-        }), {});
+        }), {} as ProvidersState);
         
         setProviders(errorProviders);
       });
@@ -191,14 +195,25 @@ export default function Home() {
       <Header />
       <YieldTable providers={providers} />
 
-      <div className="text-center mt-4 text-xs">
-        Última actualización: {lastUpdate ? new Date(lastUpdate).toLocaleDateString('es-MX', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) : 'Cargando...'}
+      <div className="space-y-2 mt-4 text-center">
+        <div className="text-sm text-gray-600 font-medium">
+          * Todos los rendimientos están anualizados
+        </div>
+
+        <div className="text-xs text-gray-500">
+          Última actualización: {lastUpdate ? new Date(lastUpdate).toLocaleDateString('es-MX', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : 'Cargando...'}
+          <br />
+          Creado por @
+          <a href="https://x.com/Inversionero" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Inversionero
+          </a>
+        </div>
       </div>
     </main>
   );
