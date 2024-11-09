@@ -16,7 +16,7 @@ services:
 
   - type: cron
     name: que-invertir-update
-    schedule: "0 */12 * * *"  # Runs every 12 hours
+    schedule: "0 */12 * * *"  # Runs at 00:00 and 12:00 every day
     httpMethod: GET
     url: https://que-invertir.onrender.com/api/cron
     headers:

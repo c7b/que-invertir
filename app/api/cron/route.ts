@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 
 export async function GET() {
   try {
-    const headersList = headers();
+    const headersList = await headers();
     const authHeader = headersList.get('authorization');
     
     if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
