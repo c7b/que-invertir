@@ -66,7 +66,7 @@ export async function isDataFresh(provider: Provider): Promise<boolean> {
   const now = new Date();
   const hoursSinceLastUpdate = (now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60);
 
-  const isFresh = hoursSinceLastUpdate < 72;
+  const isFresh = hoursSinceLastUpdate < 24;
   console.log(`${provider} data is ${isFresh ? 'fresh' : 'stale'} (${hoursSinceLastUpdate.toFixed(2)} hours old)`);
   
   return isFresh;
