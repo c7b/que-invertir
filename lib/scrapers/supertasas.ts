@@ -11,47 +11,48 @@ export async function scrapeSuperTasas(): Promise<ScrapingData> {
     
     await page.goto('https://supertasas.com/inversion/');
     
-    // Esperamos a que la animación termine y los elementos estén visibles
+    // Wait for the container with rates to be visible
     await page.waitForSelector('.tasasPM .fade-in.show', {
       timeout: 7000,
       visible: true
     });
 
-    // Esperamos usando setTimeout en lugar de waitForTimeout
-    await new Promise(resolve => setTimeout(resolve, 4000));
-
     const products = await page.evaluate(() => {
       const results = [];
       
-      // Buscamos todos los elementos con tasas
-      const tasasElements = document.querySelectorAll('.tasasPM .fade-in.show');
+      // Select all rate containers
+      const rateContainers = document.querySelectorAll('.tasasPM .fade-in.show');
       
-      tasasElements.forEach(element => {
-        const yieldElement = element.querySelector('.txt48.c-green');
-        const termElement = element.querySelector('.txt22.is-bold');
+      rateContainers.forEach(container => {
+        const yieldElement = container.querySelector('.txt48.c-white .numeros');
+        const decimalElement = container.querySelector('.txt48.c-white');
+        const termElement = container.querySelector('.txt24.is-bold.c-black');
         
-        if (yieldElement && termElement) {
-          const yieldText = yieldElement.textContent?.trim();
-          const termText = termElement.textContent?.trim();
+        if (yieldElement && decimalElement && termElement) {
+          const wholeNumber = yieldElement.textContent?.trim() || '0';
+          const fullYieldText = decimalElement.textContent?.trim() || '0';
+          const decimal = fullYieldText.split('.')[1]?.replace('%', '') || '0';
+          const termText = termElement.textContent?.trim() || '';
           
-          if (yieldText && termText) {
-            // Extraer el número de yield
-            const yieldValue = parseFloat(yieldText.replace('%', ''));
-            
-            // Determinar los días
-            let termDays = 1; // default para "A la vista"
-            if (termText.includes('364')) {
-              termDays = 364;
-            } else if (termText.includes('182')) {
-              termDays = 182;
-            } else if (termText.includes('91')) {
-              termDays = 91;
-            } else if (termText.includes('28')) {
-              termDays = 28;
-            }
+          // Calculate full yield number
+          const yieldValue = parseFloat(`${wholeNumber}.${decimal}`);
+          
+          // Extract term days
+          let termDays = 1; // default for "A la vista"
+          if (termText.includes('364')) {
+            termDays = 364;
+          } else if (termText.includes('182')) {
+            termDays = 182;
+          } else if (termText.includes('91')) {
+            termDays = 91;
+          } else if (termText.includes('28')) {
+            termDays = 28;
+          }
 
+          // Skip duplicate 364-day product (the one with monthly interests)
+          if (!termText.includes('intereses cada 28 días')) {
             results.push({
-              name: `SuperTasas: ${termText}`,
+              name: `SuperTasas: ${termText.split('(')[0].trim()}`,
               yield: yieldValue,
               termDays,
               originalTerm: termText
